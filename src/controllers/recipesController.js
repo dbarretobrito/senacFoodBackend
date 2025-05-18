@@ -11,6 +11,18 @@ exports.getAll = async (req, res) => {
   }
 };
 
+exports.getByUserId = async (req, res) => {
+  const { user_id } = req.params;
+
+  try {
+    const row = await Recipe.getByUserId(user_id);
+    if (!row) return res.status(404).json({ error: 'Receita não encontrada' });
+    res.json(row);
+  } catch (err) {
+    return res.status(500).json({ error: 'Erro ao buscar receita' });
+  }
+};
+
 exports.getById = async (req, res) => {
   const { id } = req.params;
 
@@ -23,8 +35,10 @@ exports.getById = async (req, res) => {
   }
 };
 
+// Modificada pelo Miguel
 exports.create = async (req, res) => {
   const { title, ingredients, steps, category, difficulty } = req.body;
+  const user_id = req.user.id;  // vem do middleware
 
   if (!title || !ingredients || !steps) {
     return res.status(400).json({ error: 'Campos obrigatórios faltando' });
@@ -36,12 +50,14 @@ exports.create = async (req, res) => {
       return res.status(400).json({ error: 'Já existe uma receita com esse título' });
     }
 
-    const result = await Recipe.create({ title, ingredients, steps, category, difficulty });
+    const result = await Recipe.create({ title, ingredients, steps, category, difficulty, user_id });
     res.status(201).json({ message: 'Receita criada com sucesso', id: result.lastID });
   } catch (err) {
+    console.error(err);
     return res.status(500).json({ error: 'Erro ao salvar receita' });
   }
 };
+
 
 exports.update = async (req, res) => {
   const { id } = req.params;

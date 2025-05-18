@@ -9,6 +9,12 @@ module.exports = {
     return await db.allQuery(query);
   },
 
+ // Função para obter todas as receitas de um usuario
+  async getByUserId(user_id) {
+    const query = 'SELECT * FROM recipes WHERE user_id = ?';
+    return await db.allQuery(query, [user_id]);
+  },
+
   // Função para obter uma receita por ID
   async getById(id) {
     const query = 'SELECT * FROM recipes WHERE id = ?';
@@ -21,14 +27,16 @@ module.exports = {
     return await db.getQuery(query, [title]);
   },
 
-  // Função para criar uma receita
-  async create({ title, ingredients, steps, category, difficulty }) {
-    const query = `
-      INSERT INTO recipes (title, ingredients, steps, category, difficulty) 
-      VALUES (?, ?, ?, ?, ?)
-    `;
-    return await db.runQuery(query, [title, ingredients, steps, category, difficulty]);
-  },
+
+  // miguel mudança para criar
+  async create({ title, ingredients, steps, category, difficulty, user_id }) {
+  const query = `
+    INSERT INTO recipes (title, ingredients, steps, category, difficulty, user_id) 
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+  return await db.runQuery(query, [title, ingredients, steps, category, difficulty, user_id]);
+},
+
 
   // Função para atualizar uma receita
   async update(id, { title, ingredients, steps, category, difficulty }) {

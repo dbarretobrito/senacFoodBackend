@@ -19,13 +19,21 @@ module.exports = {
     const query = `SELECT * FROM users WHERE email = ?`;
     return await db.getQuery(query, [email]);
   },
+// Função adicionada Miguel para pesquisar id
+  async findById(id) {
+  const query = `
+    SELECT id, name, email, is_admin
+    FROM users
+    WHERE id = ?
+  `;
+  return await db.getQuery(query, [id]);
+},
 
   // Função para obter todos os usuários
   async getAll() {
     const query = `
-      SELECT id, name, email, is_admin, created_at
+      SELECT id, name, email, is_admin
       FROM users
-      ORDER BY created_at DESC
     `;
     return await db.allQuery(query);
   }

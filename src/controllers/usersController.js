@@ -68,3 +68,18 @@ exports.listUsers = async (req, res) => {
     return res.status(500).json({ error: 'Erro ao listar usuários' });
   }
 };
+
+// Função Miguel
+exports.getUserById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
+    res.json(user);
+  } catch (err) {
+    console.error('Erro ao buscar usuário por ID:', err);
+    return res.status(500).json({ error: 'Erro ao buscar usuário' });
+  }
+};
+

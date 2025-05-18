@@ -5,13 +5,15 @@ const router = express.Router();
 const controller = require('../controllers/recipesController');
 const { ensureAuthenticated, ensureAdmin } = require('../middleware/ensureAuthenticated');
 
+
 // Rotas públicas
 router.get('/', controller.getAll);
 router.get('/:id', controller.getById);
+router.get('/user/:user_id', controller.getByUserId);
+router.post('/', ensureAuthenticated, controller.create);
 
 // Rotas protegidas (usuário autenticado e admin)
-router.post('/', ensureAuthenticated, ensureAdmin, controller.create);
-router.delete('/:id', ensureAuthenticated, ensureAdmin, controller.delete);
-router.put('/:id', ensureAuthenticated, ensureAdmin, controller.update);
+router.delete('/:id', controller.delete);
+router.put('/:id', ensureAuthenticated, controller.update);
 
 module.exports = router;
